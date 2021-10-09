@@ -1,2 +1,3 @@
 # MERN-app
- This repository contains practice code for creating a full stack (MERN) application.
+
+This repository contains practice code for creating a full stack (MERN) application.
