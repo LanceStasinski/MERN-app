@@ -1,7 +1,7 @@
 import React from "react";
 
 import classes from "./GoalList.module.css";
-import Goal from "../models/goals";
+import Goal from "../../models/goal";
 
 const GoalList: React.FC<{ goals: Goal[] }> = (props) => {
   return (
