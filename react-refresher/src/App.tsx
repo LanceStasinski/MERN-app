@@ -1,9 +1,14 @@
 import React from 'react';
 import './App.css';
 
+import GoalList from './components/GoalList'
+
 function App() {
   return (
-    <h1>A react app</h1>
+    <div>
+      <h2 className='goal-list'>Course Goals</h2>
+      <GoalList />
+    </div>
   );
 }
 
