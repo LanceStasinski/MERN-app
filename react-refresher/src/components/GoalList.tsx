@@ -1,12 +1,14 @@
 import React from "react";
 
-import classes from './GoalList.module.css'
+import classes from "./GoalList.module.css";
+import Goal from "../models/goals";
 
-const GoalList: React.FC = () => {
+const GoalList: React.FC<{ goals: Goal[] }> = (props) => {
   return (
-    <ul className={classes['goal-list']}>
-      <li>Finish course</li>
-      <li>Do something else</li>
+    <ul className={classes["goal-list"]}>
+      {props.goals.map((goal) => {
+        return <li key={goal.id} id={goal.id}>{goal.text}</li>;
+      })}
     </ul>
   );
 };
