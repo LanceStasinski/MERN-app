@@ -2,9 +2,9 @@ import React from "react";
 
 import classes from './SideDrawer.module.css';
 
-const SideDrawer: React.FC = () => {
+const SideDrawer: React.FC = (props) => {
   return (
-    <p>PlaceHolder</p>
+    <aside className={classes['side-drawer']}>{props.children}</aside>
   )
 }
 
