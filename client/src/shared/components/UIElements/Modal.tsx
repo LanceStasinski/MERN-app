@@ -1,8 +1,8 @@
-import React, { FormEvent } from "react";
-import { createPortal } from "react-dom";
+import React, { FormEvent, ReactNode } from "react";
+import ReactDOM  from "react-dom";
 import { CSSTransition } from "react-transition-group";
 
-import classes from "./Modal.module.css";
+import "./Modal.css";
 import Backdrop from "./Backdrop";
 
 type Props = {
@@ -15,43 +15,46 @@ type Props = {
   onSubmit?: () => void;
   contentClass?: string;
   footerClass?: string;
-  footer?: HTMLElement;
+  footer?: ReactNode;
+  nodeRef?: React.MutableRefObject<null>
 };
 
 const ModalOverLay: React.FC<Props> = (props) => {
   const content = (
     <div
-      className={`${classes["modal"]} ${props.className}`}
+      ref={props.nodeRef}
+      className={`modal ${props.className}`}
       style={props.style}
     >
-      <header className={`${classes["modal__header"]} ${props.headerClass}`}>
+      <header className={`modal__header ${props.headerClass}`}>
         <h2>{props.header}</h2>
+      </header>
         <form
           onSubmit={
             props.onSubmit
               ? props.onSubmit
-              : (event: FormEvent) => event.preventDefault
+              : (event: FormEvent) => event.preventDefault()
           }
         >
-          <div className={`${classes["modal__content"]} ${props.contentClass}`}>
+          <div className={`modal__content ${props.contentClass}`}>
             {props.children}
           </div>
           <footer
-            className={`${classes["modal__footer"]} ${props.footerClass}`}
+            className={`modal__footer ${props.footerClass}`}
           >
             {props.footer}
           </footer>
         </form>
-      </header>
     </div>
   );
-  return createPortal(
+  return ReactDOM.createPortal(
     content,
     document.getElementById("modal-hook") as HTMLElement
   );
 };
 
 const Modal: React.FC<Props> = (props) => {
+  const nodeRef = React.useRef(null);
   return (
     <React.Fragment>
       {props.show && <Backdrop onClick={props.onCancel} />}
@@ -60,9 +63,10 @@ const Modal: React.FC<Props> = (props) => {
         mountOnEnter
         unmountOnExit
         timeout={200}
-        classNames={classes.modal}
+        classNames='modal'
+        nodeRef={nodeRef}
       >
-        <ModalOverLay {...props} />
+        <ModalOverLay {...props} nodeRef={nodeRef}/>
       </CSSTransition>
     </React.Fragment>
   );
