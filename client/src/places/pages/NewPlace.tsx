@@ -1,7 +1,12 @@
 import React from "react";
 
+import Input from "../../shared/components/FormElements/Input";
+import classes from './NewPlace.module.css'
+
 const NewPlace: React.FC = () => {
-  return <h2>NewPlace works</h2>
+  return <form className={classes['place-form']}>
+    <Input element='input' type='text' label='Title' />
+  </form>
 }
 
 export default NewPlace;
