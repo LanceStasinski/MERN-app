@@ -4,6 +4,7 @@ import Card from "../../shared/components/UIElements/Card";
 import classes from "./PlaceItem.module.css";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
+import Map from "../../shared/components/UIElements/Map";
 
 const PlaceItem: React.FC<{
   id: string;
@@ -30,7 +31,7 @@ const PlaceItem: React.FC<{
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className={classes['map-container']}>
-          <h2>The map</h2>
+          <Map center={props.coordinates} zoom={16}/>
         </div>
       </Modal>
       <li className="place-item">
