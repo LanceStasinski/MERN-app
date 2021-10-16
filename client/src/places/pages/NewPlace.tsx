@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from "react";
+import React, { FormEvent, useCallback, useReducer } from "react";
 
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 import Input from "../../shared/components/FormElements/Input";
@@ -77,8 +77,13 @@ const NewPlace: React.FC = () => {
     []
   );
 
+  const placeSubmitHandler = (event: FormEvent) => {
+    event.preventDefault();
+    console.log(formState.inputs) //send to backend
+  }
+
   return (
-    <form className={classes["place-form"]}>
+    <form className={classes["place-form"]} onSubmit={placeSubmitHandler}>
       <Input
         id="title"
         element="input"
@@ -94,6 +99,15 @@ const NewPlace: React.FC = () => {
         label="Description"
         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
         errorText="Please enter a valid description (at least 5 characters)"
+        onInput={inputHandler}
+      />
+      <Input
+        id="address"
+        element="input"
+        type=''
+        label="Address"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Please enter a valid address."
         onInput={inputHandler}
       />
       <Button type='submit' disabled={!formState.isValid}>ADD PLACE</Button>
