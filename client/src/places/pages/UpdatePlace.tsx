@@ -5,6 +5,7 @@ import Place from "../../models/Place";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../util/validators";
+import classes from './PlaceForm.module.css';
 
 const DUMMY_PLACES: Place[] = [
   {
@@ -35,12 +36,12 @@ const UpdatePlace: React.FC = () => {
     );
   }
   return (
-    <form>
+    <form className={classes['place-form']}>
       <Input
         id="title"
         element="input"
         type="text"
-        label="title"
+        label="Title"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid title"
         onInput={() => {}}
@@ -50,7 +51,7 @@ const UpdatePlace: React.FC = () => {
       <Input
         id="description"
         element="textarea"
-        label="description"
+        label="Description"
         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
         errorText="Please enter a valid description (min. 5 characters)."
         onInput={() => {}}

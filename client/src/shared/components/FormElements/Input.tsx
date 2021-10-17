@@ -3,6 +3,20 @@ import React, { useReducer, useEffect } from "react";
 import { validate } from "../../../util/validators";
 import classes from "./Input.module.css";
 
+interface InputProps {
+  label?: string;
+  id: string;
+  element?: string;
+  type?: string;
+  placeHolder?: string;
+  rows?: number;
+  errorText?: string;
+  value?: string;
+  validators: { type: string; val: number }[];
+  valid?: boolean;
+  onInput: (id: string, value: string, isValid: boolean) => void;
+}
+
 const inputReducer = (
   state: { value: string; isValid: boolean; isTouched: boolean },
   action: {
@@ -29,22 +43,10 @@ const inputReducer = (
   }
 };
 
-const Input: React.FC<{
-  label?: string;
-  id: string;
-  element?: string;
-  type?: string;
-  placeHolder?: string;
-  rows?: number;
-  errorText?: string;
-  value?: string;
-  validators: { type: string; val: number }[];
-  valid?: boolean;
-  onInput: (id: string, value: string, isValid: boolean) => void;
-}> = (props) => {
+const Input: React.FC<InputProps> = (props) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
-    isValid: false,
+    value: props.value || '',
+    isValid: props.valid || false,
     isTouched: false,
   });
 

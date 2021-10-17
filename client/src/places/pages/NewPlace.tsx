@@ -2,7 +2,7 @@ import React, { FormEvent, useCallback, useReducer } from "react";
 
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 import Input from "../../shared/components/FormElements/Input";
-import classes from "./NewPlace.module.css";
+import classes from "./PlaceForm.module.css";
 import Button from '../../shared/components/FormElements/Button'
 
 interface State {
@@ -58,6 +58,10 @@ const NewPlace: React.FC = () => {
         isValid: false,
       },
       description: {
+        value: "",
+        isValid: false,
+      },
+      address: {
         value: "",
         isValid: false,
       },
