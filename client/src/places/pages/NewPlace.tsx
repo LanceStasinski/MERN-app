@@ -6,23 +6,8 @@ import classes from "./PlaceForm.module.css";
 import Button from '../../shared/components/FormElements/Button'
 import { useForm } from "../../shared/hooks/form-hook";
 
-
-interface InputItem {
-  value: string,
-  isValid: boolean
-}
-
-interface Inputs {
-  [id: string]: InputItem
-}
-
-interface State {
-  inputs: Inputs
-  isValid: boolean;
-}
-
 const NewPlace: React.FC = () => {
-  const [formState, inputHandler]: [State, ((id: string, value: string, isValid: boolean) => void)] = useForm({
+  const [formState, inputHandler] = useForm({
     title: {
       value: '',
       isValid: false

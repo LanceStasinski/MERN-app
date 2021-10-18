@@ -14,14 +14,16 @@ interface State {
   isValid: boolean;
 }
 
-interface Action {
-  type: string;
-  inputId: string;
-  isValid: boolean;
-  value: string;
-}
+// interface Action {
+//   type: string;
+//   inputId: string;
+//   isValid: boolean;
+//   value: string;
+//   inputs: Inputs;
+//   formIsValid: boolean
+// }
 
-const formReducer = (state: State, action: Action) => {
+const formReducer = (state: State, action: any) => {
   switch (action.type) {
     case "INPUT_CHANGE":
       let formIsValid = true;
@@ -40,6 +42,11 @@ const formReducer = (state: State, action: Action) => {
         },
         isValid: formIsValid,
       };
+    case 'SET_DATA':
+      return {
+        inputs: action.inputs,
+        isValid: action.formIsValid
+      }
     default:
       return state;
   }
@@ -66,10 +73,19 @@ export const useForm = (
     []
   );
 
+  const setFormData = useCallback((inputData: Inputs, formValidity: boolean) => {
+    dispatch({
+      type: 'SET_DATA',
+      inputs: inputData,
+      formIsValid: formValidity
+    })
+  }, [])
+
   const formValidation: [
     State,
-    (id: string, value: string, isValid: boolean) => void
-  ] = [formState, inputHandler];
+    (id: string, value: string, isValid: boolean) => void,
+    (inputData: Inputs, formValidity: boolean) => void
+  ] = [formState, inputHandler, setFormData];
 
   return formValidation;
 };
