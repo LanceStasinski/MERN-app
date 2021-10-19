@@ -1,5 +1,6 @@
 .place-item {
   margin: 1rem 0;
+  padding: 1rem;
 }
 
 .place-item__content {
