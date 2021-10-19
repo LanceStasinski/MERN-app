@@ -6,7 +6,7 @@ interface InputItem {
 }
 
 interface Inputs {
-  [id: string]: InputItem;
+  [id: string]: InputItem | undefined;
 }
 
 interface State {
@@ -28,10 +28,13 @@ const formReducer = (state: State, action: any) => {
     case "INPUT_CHANGE":
       let formIsValid = true;
       for (const inputId in state.inputs) {
+        if (!state.inputs[inputId]) {
+          continue;
+        }
         if (inputId === action.inputId) {
           formIsValid = formIsValid && action.isValid;
         } else {
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
+          formIsValid = formIsValid && state.inputs[inputId]!.isValid;
         }
       }
       return {
