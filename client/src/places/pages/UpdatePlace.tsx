@@ -7,6 +7,7 @@ import Button from "../../shared/components/FormElements/Button";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../util/validators";
 import classes from "./PlaceForm.module.css";
 import { useForm } from "../../shared/hooks/form-hook";
+import Card from "../../shared/components/UIElements/Card";
 
 const DUMMY_PLACES: Place[] = [
   {
@@ -45,19 +46,21 @@ const UpdatePlace: React.FC = () => {
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
 
   useEffect(() => {
-    setFormData(
-      {
-        title: {
-          value: identifiedPlace!.title,
-          isValid: true,
+    if (identifiedPlace) {
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace!.title,
+            isValid: true,
+          },
+          description: {
+            value: identifiedPlace!.description,
+            isValid: true,
+          },
         },
-        description: {
-          value: identifiedPlace!.description,
-          isValid: true,
-        },
-      },
-      true
-    );
+        true
+      );
+    }
     setIsLoading(false);
   }, [setFormData, identifiedPlace]);
 
@@ -69,7 +72,9 @@ const UpdatePlace: React.FC = () => {
   if (!identifiedPlace) {
     return (
       <div className="center">
-        <h2>Could not find place.</h2>
+        <Card className='pad'>
+          <h2>Could not find place.</h2>
+        </Card>
       </div>
     );
   }
@@ -83,35 +88,32 @@ const UpdatePlace: React.FC = () => {
   }
 
   return (
-      <form
-        className={classes["place-form"]}
-        onSubmit={placeUpdateSubmitHandler}
-      >
-        <Input
-          id="title"
-          element="input"
-          type="text"
-          label="Title"
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Please enter a valid title"
-          onInput={inputHandler}
-          initialValue={formState.inputs.title.value}
-          initialValid={formState.inputs.title.isValid}
-        ></Input>
-        <Input
-          id="description"
-          element="textarea"
-          label="Description"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid description (min. 5 characters)."
-          onInput={inputHandler}
-          initialValue={formState.inputs.description.value}
-          initialValid={formState.inputs.description.isValid}
-        ></Input>
-        <Button type="submit" disabled={!formState.isValid}>
-          UPDATE PLACE
-        </Button>
-      </form>
+    <form className={classes["place-form"]} onSubmit={placeUpdateSubmitHandler}>
+      <Input
+        id="title"
+        element="input"
+        type="text"
+        label="Title"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Please enter a valid title"
+        onInput={inputHandler}
+        initialValue={formState.inputs.title.value}
+        initialValid={formState.inputs.title.isValid}
+      ></Input>
+      <Input
+        id="description"
+        element="textarea"
+        label="Description"
+        validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+        errorText="Please enter a valid description (min. 5 characters)."
+        onInput={inputHandler}
+        initialValue={formState.inputs.description.value}
+        initialValid={formState.inputs.description.isValid}
+      ></Input>
+      <Button type="submit" disabled={!formState.isValid}>
+        UPDATE PLACE
+      </Button>
+    </form>
   );
 };
 
