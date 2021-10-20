@@ -7,7 +7,7 @@ const Users: React.FC = () => {
   const USERS: User[] = [
     new User(
       "Lance",
-      "https://media-exp1.licdn.com/dms/image/D4D35AQGVLcDRyjsPMw/profile-framedphoto-shrink_400_400/0/1622477235040?e=1633993200&v=beta&t=eRUFZptz3zOrth7xGRhdNaRNGa7KeF68I0i67GrasHg",
+      "https://cdn.cnn.com/cnnnext/dam/assets/211019120241-05-leaf-clip-dryas-plants-exlarge-169.jpg",
       2
     ),
   ];

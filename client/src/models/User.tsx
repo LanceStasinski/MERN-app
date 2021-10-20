@@ -6,7 +6,7 @@ class User {
 
   constructor(name: string, image: string, places: number) {
     this.name = name;
-    this.id = (Math.random() * 1000000).toFixed();
+    this.id = 'u1';
     this.image = image;
     this.places = places
   }

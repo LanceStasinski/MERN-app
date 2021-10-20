@@ -42,9 +42,6 @@ function App() {
         <Route path="/places/:placeId">
           <UpdatePlace />
         </Route>
-        <Route path="/auth" exact>
-          <Auth />
-        </Route>
         <Redirect to="/" />
       </Switch>
     );
