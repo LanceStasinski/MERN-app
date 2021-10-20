@@ -1,12 +1,26 @@
-const fs = require('fs')
+import { NextFunction } from "express";
 
-const userName: string = 'Lance';
+const http = require("http");
 
-fs.writeFile('user-data.txt', 'Name:' + userName, (err:any) => {
-  if (err) {
-    console.log(err);
-    return
+const server = http.createServer((req: any, res: any, next: any) => {
+  console.log("Incoming request");
+  console.log(req.method, req.url);
+
+  if (req.method === "POST") {
+    let body: string = "";
+    req.on("end", () => {
+      const userName = body.split("=")[1];
+      res.end(`<h1>${userName}</h1>`);
+    });
+    req.on("data", (chunk: any) => {
+      body += chunk;
+    });
+  } else {
+    res.setHeader("Content-Type", "text/html");
+    res.end(
+      "<form method='POST'><input type='text' name='username'><button type='submit'>Create User</button></form>"
+    );
   }
-  console.log('Wrote file.')
-})
+});
 
+server.listen(5000);
