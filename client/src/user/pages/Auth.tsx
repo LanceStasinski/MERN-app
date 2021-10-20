@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useContext } from "react";
 import Input from "../../shared/components/FormElements/Input";
 
 import { useForm } from "../../shared/hooks/form-hook";
@@ -10,8 +10,10 @@ import {
 } from "../../util/validators";
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
+import { AuthContext } from "../../shared/context/auth-context";
 
 const Auth: React.FC = () => {
+  const auth = useContext(AuthContext)
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -54,6 +56,7 @@ const Auth: React.FC = () => {
   const authenticateHandler = (event: FormEvent) => {
     event.preventDefault();
     console.log(formState.inputs);
+    auth.login()
   };
   return (
     <Card className={`${classes.authentication} pad`}>
@@ -94,7 +97,7 @@ const Auth: React.FC = () => {
         </Button>
       </form>
       <Button inverse onClick={switchModeHandler}>
-        SWITCH TO {isLoginMode ? "LOGIN" : "SIGNUP"}
+        SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
       </Button>
     </Card>
   );
