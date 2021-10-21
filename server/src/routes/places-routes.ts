@@ -1,6 +1,6 @@
 import express from "express";
 
-import ServerError from "../util/error";
+import HttpError from "../models/http-error";
 
 const router = express.Router();
 
@@ -18,14 +18,13 @@ const DUMMY_PLACES = [
   },
 ];
 
-
-
 router.get("/:pid", (req, res, next) => {
   const placeId = req.params.pid;
   const place = DUMMY_PLACES.find((p) => p.id === placeId);
   if (!place) {
-    const error  = new ServerError('Could not find place for provided place ID', 404);
-    return next(error) // will work with async code that will be implemented later
+    return next(
+      new HttpError("Could not find place for provided place ID", 404)
+    ); // will work with async code that will be implemented later
   }
   res.json({ place });
 });
@@ -34,8 +33,9 @@ router.get("/user/:uid", (req, res, next) => {
   const userId = req.params.uid;
   const places = DUMMY_PLACES.find((p) => p.creator === userId);
   if (!places) {
-    const error  = new ServerError('Could not find place for provided user ID', 404);
-    return next(error) // will work with async code that will be implemented later
+    return next(
+      new HttpError("Could not find place for provided user ID", 404)
+    );
   }
   res.json({ places });
 });

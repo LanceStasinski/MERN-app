@@ -2,14 +2,14 @@ import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 
 import placesRoutes from "./routes/places-routes";
-import ServerError from "./util/error";
+import HttpError from "./models/http-error";
 //import usersRoutes from './routes/users-routes'
 
 const app = express();
 
 app.use('/api/places', placesRoutes);
 
-app.use((err: ServerError, req:Request, res:Response, next: NextFunction) => {
+app.use((err: HttpError, req:Request, res:Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
   }
