@@ -66,3 +66,24 @@ export const createPlace = (
 
   res.status(201).json({ place: createdPlace });
 };
+
+export const updatePlace = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const placeId = req.params.pid;
+  const { title, description, location, address } = req.body;
+  const place = DUMMY_PLACES.find(p => p.id === placeId);
+
+  if (!place) {
+    return next(new HttpError('Place not found', 404))
+  }
+
+  place!.title = title;
+  place!.description = description;
+  place!.location = location;
+  place!.address = address;
+
+  res.status(200).json({ place: place})
+};
