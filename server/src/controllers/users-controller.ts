@@ -35,3 +35,19 @@ export const signUp = (req: Request, res: Response, next: NextFunction) => {
   DUMMY_USERS.push(newUser);
   res.status(201).json({ message: "User created.", user: newUser });
 };
+
+export const login = (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+  if (email.length === 0 || password.length === 0) {
+    return next(new HttpError("No name or password provided", 404));
+  }
+
+  const user = DUMMY_USERS.find((u) => u.email === email);
+  if (!user) {
+    return next(new HttpError("Incorrect name or password", 404));
+  }
+  if (password !== user!.password) {
+    return next(new HttpError("Incorrect name or password", 404));
+  }
+  res.status(200).json({ message: "User logged in", user });
+};
