@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 
 import placesRoutes from "./routes/places-routes";
+import usersRoutes from "./routes/users-routes";
 import HttpError from "./models/http-error";
 //import usersRoutes from './routes/users-routes'
 
@@ -11,10 +12,13 @@ app.use(bodyParser.json());
 
 app.use("/api/places", placesRoutes);
 
-app.use((req, res, next) => { //send 404 error if route is not found
-  const error = new HttpError('Could not find this route.', 404);
+app.use("/api/users", usersRoutes);
+
+app.use((req, res, next) => {
+  //send 404 error if route is not found
+  const error = new HttpError("Could not find this route.", 404);
   throw error; // this is sync. code so throw works here
-})
+});
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {

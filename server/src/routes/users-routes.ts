@@ -1,21 +1,9 @@
-import express from 'express'
+import express from "express";
+
+import { getUsers } from "../controllers/users-controller";
 
 const router = express.Router();
 
-const DUMMY_PLACES = [
-  {
-    id: 'p1',
-    title: 'Empire State Building',
-    description: 'Tall building',
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878531
-    },
-    address: '20 W 34th St, New York, NY 10001',
-    creator: 'u1'
-  }
-];
-
-
+router.get('/', getUsers)
 
 export default router;
