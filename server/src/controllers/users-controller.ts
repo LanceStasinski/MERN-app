@@ -26,6 +26,11 @@ export const getUsers = (req: Request, res: Response, next: NextFunction) => {
 
 export const signUp = (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body;
+
+  const hasUser = DUMMY_USERS.find(u => u.email === email);
+  if (hasUser){
+    return next(new HttpError('User already exists.', 422))
+  }
   const newUser = {
     name,
     email,
