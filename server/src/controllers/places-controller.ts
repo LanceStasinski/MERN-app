@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from "uuid";
 import { validationResult } from "express-validator";
 
+import getCoordsForAddress from "../util/location";
 import HttpError from "../models/http-error";
 
 interface Place {
@@ -60,21 +61,29 @@ export const getPlacesByUserId = (
   res.json({ places });
 };
 
-export const createPlace = (
+export const createPlace = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid inputs.", 422);
+    return next(new HttpError("Invalid inputs.", 422));
   }
-  const { title, description, location, address, creator } = req.body;
+  const { title, description, address, creator } = req.body;
+
+  let location;
+  try {
+    location = await getCoordsForAddress(address);
+  } catch (error) {
+    return next(error);
+  }
+
   const createdPlace = {
     id: uuid(),
     title,
     description,
-    location,
+    location: location,
     address,
     creator,
   };
@@ -94,7 +103,7 @@ export const updatePlace = (
     throw new HttpError("Invalid inputs.", 422);
   }
   const placeId = req.params.pid;
-  const { title, description, location, address } = req.body;
+  const { title, description } = req.body;
   const place = { ...DUMMY_PLACES.find((p) => p.id === placeId) }; //best practice to copy and object instead of directly modifying it
 
   if (!place) {
@@ -103,12 +112,8 @@ export const updatePlace = (
 
   const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
 
-  //place!.id = DUMMY_PLACES[placeIndex].id;
   place!.title = title;
   place!.description = description;
-  place!.location = location;
-  place!.address = address;
-  //place!.creator = DUMMY_PLACES[placeIndex].creator;
 
   DUMMY_PLACES[placeIndex] = place as Place;
 
