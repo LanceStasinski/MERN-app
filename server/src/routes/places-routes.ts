@@ -5,6 +5,7 @@ import {
   getPlacesByUserId,
   createPlace,
   updatePlace,
+  deletePlace
 } from "../controllers/places-controller";
 
 const router = express.Router();
@@ -12,6 +13,8 @@ const router = express.Router();
 router.get("/:pid", getPlaceById);
 
 router.patch("/:pid", updatePlace);
+
+router.delete('/:pid', deletePlace)
 
 router.get("/user/:uid", getPlacesByUserId);
 
