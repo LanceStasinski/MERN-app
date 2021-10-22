@@ -12,3 +12,9 @@ The frontend was built using React with typescript and CSS modules for styling. 
 * useCallback() - prevent a function from being recreated each time a component renders
 * useEffect() - manage effects after a component renders
 * useParams() - hook from React Router DOM that retrieves values from route params
+
+## The Backend
+
+### NodeJS
+
+The backend is a REST api that has separate routes and controllers for places and users. These routes allow a user to signup, login, find a list of all users, create a place, retrieve all places for single user, update a place, and delete a place. The server is built using the Express framework. Validation was added using the `express-validator` package. Coordinates are generated for each place using the Geocoding API from Google.
