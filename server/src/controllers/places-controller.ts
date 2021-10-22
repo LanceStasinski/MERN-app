@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { v4 as uuid } from "uuid";
 
 import HttpError from "../models/http-error";
 
@@ -16,7 +17,11 @@ const DUMMY_PLACES = [
   },
 ];
 
-export const getPlaceById = (req: Request, res: Response, next: NextFunction) => {
+export const getPlaceById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const placeId = req.params.pid;
   const place = DUMMY_PLACES.find((p) => p.id === placeId);
   if (!place) {
@@ -25,9 +30,13 @@ export const getPlaceById = (req: Request, res: Response, next: NextFunction) =>
     ); // will work with async code that will be implemented later
   }
   res.json({ place });
-}
+};
 
-export const getPlacesByUserId = (req: Request, res: Response, next: NextFunction) => {
+export const getPlacesByUserId = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const userId = req.params.uid;
   const places = DUMMY_PLACES.find((p) => p.creator === userId);
   if (!places) {
@@ -36,4 +45,24 @@ export const getPlacesByUserId = (req: Request, res: Response, next: NextFunctio
     );
   }
   res.json({ places });
-}
+};
+
+export const createPlace = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { title, description, location, address, creator } = req.body;
+  const createdPlace = {
+    id: uuid(),
+    title,
+    description,
+    location,
+    address,
+    creator,
+  };
+
+  DUMMY_PLACES.push(createdPlace);
+
+  res.status(201).json({ place: createdPlace });
+};

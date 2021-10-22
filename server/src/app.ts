@@ -7,13 +7,17 @@ import HttpError from "./models/http-error";
 
 const app = express();
 
-app.use('/api/places', placesRoutes);
+app.use(bodyParser.json());
 
-app.use((err: HttpError, req:Request, res:Response, next: NextFunction) => {
+app.use("/api/places", placesRoutes);
+
+app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
   }
-  res.status(err.code || 500).json({message: err.message || 'An unknown error occurred.'})
-})
+  res
+    .status(err.code || 500)
+    .json({ message: err.message || "An unknown error occurred." });
+});
 
 app.listen(5000);
