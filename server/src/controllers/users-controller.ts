@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from "uuid";
+import { validationResult } from "express-validator";
 
 import HttpError from "../models/http-error";
 
@@ -7,7 +8,7 @@ const DUMMY_USERS = [
   {
     name: "Lance",
     email: "lance.stasinski@gmail.com",
-    password: "1234",
+    password: "tester",
     id: "u1",
   },
 ];
@@ -25,6 +26,10 @@ export const getUsers = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export const signUp = (req: Request, res: Response, next: NextFunction) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError('Invalid inputs.', 422)
+  }
   const { name, email, password } = req.body;
 
   const hasUser = DUMMY_USERS.find(u => u.email === email);

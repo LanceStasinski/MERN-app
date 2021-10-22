@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from "uuid";
+import { validationResult } from "express-validator";
 
 import HttpError from "../models/http-error";
 
@@ -64,6 +65,10 @@ export const createPlace = (
   res: Response,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Invalid inputs.", 422);
+  }
   const { title, description, location, address, creator } = req.body;
   const createdPlace = {
     id: uuid(),
@@ -84,6 +89,10 @@ export const updatePlace = (
   res: Response,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Invalid inputs.", 422);
+  }
   const placeId = req.params.pid;
   const { title, description, location, address } = req.body;
   const place = { ...DUMMY_PLACES.find((p) => p.id === placeId) }; //best practice to copy and object instead of directly modifying it
@@ -112,6 +121,9 @@ export const deletePlace = (
   next: NextFunction
 ) => {
   const placeId = req.params.pid;
+  if (!DUMMY_PLACES.find((p) => p.id === placeId)) {
+    throw new HttpError("No place found to delete", 404);
+  }
   DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
-  res.status(200).json({ message: 'Deleted place' });
+  res.status(200).json({ message: "Deleted place" });
 };
