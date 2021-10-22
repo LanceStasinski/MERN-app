@@ -11,6 +11,11 @@ app.use(bodyParser.json());
 
 app.use("/api/places", placesRoutes);
 
+app.use((req, res, next) => { //send 404 error if route is not found
+  const error = new HttpError('Could not find this route.', 404);
+  throw error; // this is sync. code so throw works here
+})
+
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
