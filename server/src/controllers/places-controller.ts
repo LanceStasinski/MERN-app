@@ -50,10 +50,10 @@ export const getPlacesByUserId = (
   next: NextFunction
 ) => {
   const userId = req.params.uid;
-  const places = DUMMY_PLACES.find((p) => p.creator === userId);
-  if (!places) {
+  const places = DUMMY_PLACES.filter((p) => p.creator === userId);
+  if (!places || places.length === 0) {
     return next(
-      new HttpError("Could not find place for provided user ID", 404)
+      new HttpError("Could not find places for provided user ID", 404)
     );
   }
   res.json({ places });
