@@ -35,4 +35,20 @@ export const getProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const client = new MongoClient(
+    `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@cluster0.l5g7f.mongodb.net/products?retryWrites=true&w=majority`
+  );
+
+  let products;
+  try {
+    await client.connect();
+    const db = client.db();
+    products = await db.collection("products").find().toArray();
+  } catch (error) {
+    return res.json({ message: "Could not retrieve products", error: error });
+  }
+  client.close();
+
+  res.json(products)
+};
