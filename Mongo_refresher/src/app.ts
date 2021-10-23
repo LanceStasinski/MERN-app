@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-import { createProduct, getProducts } from "./mongo";
+import { createProduct, getProducts } from "./mongoose";
 
 const app = express();
 
