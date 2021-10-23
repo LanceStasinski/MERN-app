@@ -25,13 +25,16 @@ export const createProduct = async (
     name: req.body.name,
     price: req.body.price,
   });
-  const result  = await createdProduct.save();
+  const result = await createdProduct.save();
 
   res.json(result);
 };
 
-export const getProducts = (
+export const getProducts = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
+) => {
+  const products = await Product.find().exec(); //turn into promise with exec()
+  res.json(products);
+};
