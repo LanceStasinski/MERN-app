@@ -65,7 +65,9 @@ export const getPlacesByUserId = async (
   if (!places || places.length === 0) {
     return next(new HttpError("Could not find places for this user.", 404));
   }
-  res.json({places: places.map(place => place.toObject({ getters: true}))});
+  res.json({
+    places: places.map((place) => place.toObject({ getters: true })),
+  });
 };
 
 export const createPlace = async (
@@ -106,7 +108,7 @@ export const createPlace = async (
   res.status(201).json({ place: createdPlace });
 };
 
-export const updatePlace = (
+export const updatePlace = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -116,21 +118,27 @@ export const updatePlace = (
     throw new HttpError("Invalid inputs.", 422);
   }
   const placeId = req.params.pid;
+  let place;
   const { title, description } = req.body;
-  const place = { ...DUMMY_PLACES.find((p) => p.id === placeId) }; //best practice to copy and object instead of directly modifying it
-
+  try {
+    place = await Place.findById(placeId);
+  } catch (error) {
+    return next(new HttpError("Could not find place.", 500));
+  }
   if (!place) {
     return next(new HttpError("Place not found", 404));
   }
 
-  const placeIndex = DUMMY_PLACES.findIndex((p) => p.id === placeId);
-
   place!.title = title;
   place!.description = description;
 
-  DUMMY_PLACES[placeIndex] = place as Place;
+  try {
+    await place.save();
+  } catch (error) {
+    return next(new HttpError("Could not save place.", 500));
+  }
 
-  res.status(200).json({ place: place });
+  res.status(200).json({ place: place.toObject({getters: true})});
 };
 
 export const deletePlace = (
