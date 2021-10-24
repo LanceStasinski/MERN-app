@@ -11,7 +11,7 @@ const placeSchema = new Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
-  creator: { type: String, required: true },
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
 });
 
 interface PlaceDoc extends mongoose.Document {
@@ -23,7 +23,7 @@ interface PlaceDoc extends mongoose.Document {
     lat: number;
     lng: number;
   };
-  creator: string;
+  creator: mongoose.Types.ObjectId;
 }
 
 export const placeModel = mongoose.model<PlaceDoc>("Place", placeSchema);

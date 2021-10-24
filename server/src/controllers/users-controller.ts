@@ -58,7 +58,7 @@ export const signUp = async (
     password,
     image:
       "https://cdn.cnn.com/cnnnext/dam/assets/211019120241-05-leaf-clip-dryas-plants-exlarge-169.jpg",
-    places: "Some IDs",
+    places: [],
   });
 
   try {
