@@ -23,7 +23,7 @@ interface PlaceDoc extends mongoose.Document {
     lat: number;
     lng: number;
   };
-  creator: mongoose.Types.ObjectId;
+  creator: any;
 }
 
 export const placeModel = mongoose.model<PlaceDoc>("Place", placeSchema);

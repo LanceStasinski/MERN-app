@@ -169,7 +169,7 @@ export const deletePlace = async (
 
   let place;
   try {
-    place = await Place.findById(placeId);
+    place = await Place.findById(placeId).populate('creator');
   } catch (error) {
     return next(new HttpError('Could not retrieve place.', 500))
   }
@@ -179,7 +179,12 @@ export const deletePlace = async (
   }
 
   try {
-    await place.remove()
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await place.remove({session: sess});
+    place.creator.places.pull(place);
+    await place.creator.save({session: sess})
+    await sess.commitTransaction();
   } catch (error) {
     return next(new HttpError('Could not delete place.', 500))
   }
