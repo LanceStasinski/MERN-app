@@ -5,25 +5,27 @@ import { userModel as User } from "../models/user";
 
 import HttpError from "../models/http-error";
 
-const DUMMY_USERS = [
-  {
-    name: "Lance",
-    email: "lance.stasinski@gmail.com",
-    password: "tester",
-    id: "u1",
-  },
-];
+// const DUMMY_USERS = [
+//   {
+//     name: "Lance",
+//     email: "lance.stasinski@gmail.com",
+//     password: "tester",
+//     id: "u1",
+//   },
+// ];
 
-export const getUsers = (req: Request, res: Response, next: NextFunction) => {
-  let userNames = [];
-  for (const user of DUMMY_USERS) {
-    userNames.push(user.name);
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let users;
+  try {
+    users = await User.find({}, "-password"); //return email and name (minus password)
+  } catch (error) {
+    return next(new HttpError("Could not find users", 500));
   }
-
-  if (userNames.length === 0) {
-    return next(new HttpError("No users found.", 404));
-  }
-  res.json({ userNames });
+  res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 
 export const signUp = async (
@@ -88,7 +90,7 @@ export const login = async (
   }
 
   if (!existingUser || existingUser.password !== password) {
-    return next(new HttpError('Invalid credentials. Could not log in.', 401))
+    return next(new HttpError("Invalid credentials. Could not log in.", 401));
   }
-  res.status(200).json({ message: "User logged in"});
+  res.status(200).json({ message: "User logged in" });
 };
