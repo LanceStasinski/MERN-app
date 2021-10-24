@@ -50,19 +50,22 @@ export const getPlaceById = async (
   res.json({ place: place.toObject({ getters: true }) }); //getters: true tells mongoose to add the id to the newly created object
 };
 
-export const getPlacesByUserId = (
+export const getPlacesByUserId = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const userId = req.params.uid;
-  const places = DUMMY_PLACES.filter((p) => p.creator === userId);
-  if (!places || places.length === 0) {
-    return next(
-      new HttpError("Could not find places for provided user ID", 404)
-    );
+  let places;
+  try {
+    places = await Place.find({ creator: userId });
+  } catch (error) {
+    return next(new HttpError("Could not find places for this user.", 500));
   }
-  res.json({ places });
+  if (!places || places.length === 0) {
+    return next(new HttpError("Could not find places for this user.", 404));
+  }
+  res.json({places: places.map(place => place.toObject({ getters: true}))});
 };
 
 export const createPlace = async (
