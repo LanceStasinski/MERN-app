@@ -71,14 +71,24 @@ export const signUp = async (
   });
 };
 
-export const login = (req: Request, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
 
-  const identifiedUser = DUMMY_USERS.find((u) => u.email === email);
-
-  if (!identifiedUser || password !== identifiedUser!.password) {
-    return next(new HttpError("Incorrect name or password", 404));
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (error) {
+    return next(
+      new HttpError("Logging in failed, please try again later", 500)
+    );
   }
 
-  res.status(200).json({ message: "User logged in", identifiedUser });
+  if (!existingUser || existingUser.password !== password) {
+    return next(new HttpError('Invalid credentials. Could not log in.', 401))
+  }
+  res.status(200).json({ message: "User logged in"});
 };
