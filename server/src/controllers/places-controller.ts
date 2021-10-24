@@ -58,17 +58,18 @@ export const getPlacesByUserId = async (
   next: NextFunction
 ) => {
   const userId = req.params.uid;
-  let places;
+  // let places;
+  let userWithPlaces;
   try {
-    places = await Place.find({ creator: userId });
+    userWithPlaces = await User.findById(userId).populate('places');
   } catch (error) {
     return next(new HttpError("Could not find places for this user.", 500));
   }
-  if (!places || places.length === 0) {
+  if (!userWithPlaces || userWithPlaces.places.length === 0) {
     return next(new HttpError("Could not find places for this user.", 404));
   }
   res.json({
-    places: places.map((place) => place.toObject({ getters: true })),
+    places: userWithPlaces.places.map((place) => place.toObject({ getters: true })),
   });
 };
 
