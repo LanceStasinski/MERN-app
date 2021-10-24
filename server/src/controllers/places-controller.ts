@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { v4 as uuid } from "uuid";
 import { validationResult } from "express-validator";
 
 import getCoordsForAddress from "../util/location";
@@ -7,32 +6,6 @@ import HttpError from "../models/http-error";
 import { placeModel as Place } from "../models/place";
 import { userModel as User } from "../models/user";
 import mongoose from 'mongoose'
-
-// interface Place {
-//   id: string;
-//   title: string;
-//   description: string;
-//   location: {
-//     lat: number;
-//     lng: number;
-//   };
-//   address: string;
-//   creator: string;
-// }
-
-// let DUMMY_PLACES = [
-//   {
-//     id: "p1",
-//     title: "Empire State Building",
-//     description: "Tall building",
-//     location: {
-//       lat: 40.7484405,
-//       lng: -73.9878531,
-//     },
-//     address: "20 W 34th St, New York, NY 10001",
-//     creator: "u1",
-//   },
-// ];
 
 export const getPlaceById = async (
   req: Request,
@@ -58,7 +31,7 @@ export const getPlacesByUserId = async (
   next: NextFunction
 ) => {
   const userId = req.params.uid;
-  // let places;
+
   let userWithPlaces;
   try {
     userWithPlaces = await User.findById(userId).populate('places');
