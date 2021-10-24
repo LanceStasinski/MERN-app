@@ -116,7 +116,7 @@ export const updatePlace = async (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid inputs.", 422);
+    return next(new HttpError("Invalid inputs.", 422));
   }
   const placeId = req.params.pid;
   let place;

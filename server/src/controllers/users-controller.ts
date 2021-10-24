@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuid } from "uuid";
 import { validationResult } from "express-validator";
+import { userModel as User } from "../models/user";
 
 import HttpError from "../models/http-error";
 
@@ -25,25 +26,49 @@ export const getUsers = (req: Request, res: Response, next: NextFunction) => {
   res.json({ userNames });
 };
 
-export const signUp = (req: Request, res: Response, next: NextFunction) => {
+export const signUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError('Invalid inputs.', 422)
+    return next(new HttpError("Invalid inputs.", 422));
   }
   const { name, email, password } = req.body;
 
-  const hasUser = DUMMY_USERS.find(u => u.email === email);
-  if (hasUser){
-    return next(new HttpError('User already exists.', 422))
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (error) {
+    return next(
+      new HttpError("Signing up failed, please try again later", 500)
+    );
   }
-  const newUser = {
+
+  if (existingUser) {
+    return next(new HttpError("A user with this email already exists", 422));
+  }
+
+  const newUser = new User({
     name,
     email,
     password,
-    id: uuid(),
-  };
-  DUMMY_USERS.push(newUser);
-  res.status(201).json({ message: "User created.", user: newUser });
+    image:
+      "https://cdn.cnn.com/cnnnext/dam/assets/211019120241-05-leaf-clip-dryas-plants-exlarge-169.jpg",
+    places: "Some IDs",
+  });
+
+  try {
+    await newUser.save();
+  } catch (error) {
+    return next(new HttpError("Signup failed.", 500));
+  }
+
+  res.status(201).json({
+    message: "User created.",
+    user: newUser.toObject({ getters: true }),
+  });
 };
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
