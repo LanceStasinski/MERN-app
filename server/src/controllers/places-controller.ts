@@ -6,31 +6,32 @@ import getCoordsForAddress from "../util/location";
 import HttpError from "../models/http-error";
 import { placeModel as Place } from "../models/place";
 
-interface Place {
-  id: string;
-  title: string;
-  description: string;
-  location: {
-    lat: number;
-    lng: number;
-  };
-  address: string;
-  creator: string;
-}
 
-let DUMMY_PLACES = [
-  {
-    id: "p1",
-    title: "Empire State Building",
-    description: "Tall building",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878531,
-    },
-    address: "20 W 34th St, New York, NY 10001",
-    creator: "u1",
-  },
-];
+// interface Place {
+//   id: string;
+//   title: string;
+//   description: string;
+//   location: {
+//     lat: number;
+//     lng: number;
+//   };
+//   address: string;
+//   creator: string;
+// }
+
+// let DUMMY_PLACES = [
+//   {
+//     id: "p1",
+//     title: "Empire State Building",
+//     description: "Tall building",
+//     location: {
+//       lat: 40.7484405,
+//       lng: -73.9878531,
+//     },
+//     address: "20 W 34th St, New York, NY 10001",
+//     creator: "u1",
+//   },
+// ];
 
 export const getPlaceById = async (
   req: Request,
@@ -129,8 +130,8 @@ export const updatePlace = async (
     return next(new HttpError("Place not found", 404));
   }
 
-  place!.title = title;
-  place!.description = description;
+  place.title = title;
+  place.description = description;
 
   try {
     await place.save();

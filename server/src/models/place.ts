@@ -14,4 +14,16 @@ const placeSchema = new Schema({
   creator: { type: String, required: true },
 });
 
-export const placeModel = mongoose.model("Place", placeSchema);
+interface PlaceDoc extends mongoose.Document {
+  title: string;
+  description: string;
+  image: string;
+  address: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  creator: string;
+}
+
+export const placeModel = mongoose.model<PlaceDoc>("Place", placeSchema);
