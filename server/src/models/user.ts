@@ -16,7 +16,7 @@ interface UserDoc {
   email: string;
   password: string;
   image: string;
-  places: mongoose.Types.ObjectId[] | []
+  places: any[]
 }
 
 export const userModel = model<UserDoc>("User", userSchema);

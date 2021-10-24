@@ -5,7 +5,8 @@ import { validationResult } from "express-validator";
 import getCoordsForAddress from "../util/location";
 import HttpError from "../models/http-error";
 import { placeModel as Place } from "../models/place";
-
+import { userModel as User } from "../models/user";
+import mongoose from 'mongoose'
 
 // interface Place {
 //   id: string;
@@ -99,8 +100,25 @@ export const createPlace = async (
     creator,
   });
 
+  let user;
   try {
-    await createdPlace.save();
+    user = await User.findById(creator)
+  } catch (error) {
+    return next(new HttpError('Creating place failed', 500))
+  }
+
+  if (!user) {
+    return next(new HttpError('Could not find user for provided userID', 404))
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({session: sess});
+
+    user.places.push(createdPlace);
+    await user.save({session: sess});
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError("Could not save product.", 500);
     return next(error);
