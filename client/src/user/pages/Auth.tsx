@@ -12,7 +12,7 @@ import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import { AuthContext } from "../../shared/context/auth-context";
 
-const REST_API = process.env.REACT_REST_API;
+const REST_API = process.env.REACT_APP_REST_API;
 
 const Auth: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -61,7 +61,7 @@ const Auth: React.FC = () => {
     if (isLoginMode) {
     } else {
       try {
-        const response = await fetch(REST_API + "/users/signup", {
+        const response = await fetch(`${REST_API}/users/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
