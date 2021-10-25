@@ -65,7 +65,7 @@ const Auth: React.FC = () => {
 
     if (isLoginMode) {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           `${REST_API}/users/login`,
           "POST",
           JSON.stringify({
@@ -77,11 +77,11 @@ const Auth: React.FC = () => {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (error) {} // error is caught in the custom hook
     } else {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           `${REST_API}/users/signup`,
           "POST",
           JSON.stringify({
@@ -94,7 +94,7 @@ const Auth: React.FC = () => {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (error: any) {}
     }
   };

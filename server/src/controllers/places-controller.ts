@@ -89,12 +89,11 @@ export const createPlace = async (
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await createdPlace.save({session: sess});
-
     user.places.push(createdPlace);
     await user.save({session: sess});
     await sess.commitTransaction();
   } catch (err) {
-    const error = new HttpError("Could not save product.", 500);
+    const error = new HttpError("Could not save place.", 500);
     return next(error);
   }
 

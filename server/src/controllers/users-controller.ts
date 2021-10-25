@@ -82,5 +82,10 @@ export const login = async (
   if (!existingUser || existingUser.password !== password) {
     return next(new HttpError("Invalid credentials. Could not log in.", 401));
   }
-  res.status(200).json({ message: "User logged in" });
+  res
+    .status(200)
+    .json({
+      message: "User logged in",
+      user: existingUser.toObject({ getters: true }),
+    });
 };
