@@ -12,6 +12,7 @@ import {
 } from "../../util/validators";
 import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
+import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 
 const REST_API = process.env.REACT_APP_REST_API;
@@ -19,8 +20,7 @@ const REST_API = process.env.REACT_APP_REST_API;
 const Auth: React.FC = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -63,63 +63,45 @@ const Auth: React.FC = () => {
   const authenticateHandler = async (event: FormEvent) => {
     event.preventDefault();
 
-    setIsLoading(true);
     if (isLoginMode) {
       try {
-        const response = await fetch(`${REST_API}/users/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        await sendRequest(
+          `${REST_API}/users/login`,
+          "POST",
+          JSON.stringify({
             email: formState.inputs.email!.value,
             password: formState.inputs.password!.value,
           }),
-        });
+          {
+            "Content-Type": "application/json",
+          }
+        );
 
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
-        setIsLoading(false);
         auth.login();
-      } catch (error: any) {
-        setIsLoading(false);
-        setError(error.message || "Something went wrong, please try again.");
-      }
+      } catch (error) {} // error is caught in the custom hook
     } else {
       try {
-        const response = await fetch(`${REST_API}/users/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+        await sendRequest(
+          `${REST_API}/users/signup`,
+          "POST",
+          JSON.stringify({
             name: formState.inputs.name!.value,
             email: formState.inputs.email!.value,
             password: formState.inputs.password!.value,
           }),
-        });
+          {
+            "Content-Type": "application/json",
+          }
+        );
 
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
-        }
-        setIsLoading(false);
         auth.login();
-      } catch (error: any) {
-        setIsLoading(false);
-        setError(error.message || "Something went wrong, please try again.");
-      }
+      } catch (error: any) {}
     }
   };
 
-  const errorHandler = () => {
-    setError(undefined)
-  }
   return (
     <React.Fragment>
-      <ErrorModal error={error} onClear={errorHandler}/>
+      <ErrorModal error={error} onClear={clearError} />
       <Card className={`${classes.authentication} pad`}>
         {isLoading && <LoadingSpinner asOverlay />}
         <h2>Login Required</h2>
