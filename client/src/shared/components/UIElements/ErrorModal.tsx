@@ -3,7 +3,7 @@ import React from 'react';
 import Modal from './Modal';
 import Button from '../FormElements/Button';
 
-const ErrorModal: React.FC<{error: boolean, onClear:() => void}> = props => {
+const ErrorModal: React.FC<{error: string | undefined, onClear:() => void}> = props => {
   return (
     <Modal
       onCancel={props.onClear}

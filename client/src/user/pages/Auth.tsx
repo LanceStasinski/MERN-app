@@ -80,9 +80,12 @@ const Auth: React.FC = () => {
         });
 
         const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
         console.log(responseData);
-        auth.login();
         setIsLoading(false);
+        auth.login();
       } catch (error: any) {
         console.log(error);
         setIsLoading(false);
@@ -90,49 +93,56 @@ const Auth: React.FC = () => {
       }
     }
   };
+
+  const errorHandler = () => {
+    setError(undefined)
+  }
   return (
-    <Card className={`${classes.authentication} pad`}>
-      {isLoading && <LoadingSpinner asOverlay/>}
-      <h2>Login Required</h2>
-      <hr />
-      <form onSubmit={authenticateHandler}>
-        {!isLoginMode && (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={errorHandler}/>
+      <Card className={`${classes.authentication} pad`}>
+        {isLoading && <LoadingSpinner asOverlay />}
+        <h2>Login Required</h2>
+        <hr />
+        <form onSubmit={authenticateHandler}>
+          {!isLoginMode && (
+            <Input
+              id="name"
+              element="input"
+              type="text"
+              label="Your name"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter your name."
+              onInput={inputHandler}
+            />
+          )}
           <Input
-            id="name"
+            id="email"
             element="input"
-            type="text"
-            label="Your name"
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Please enter your name."
+            type="email"
+            label="Email"
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
+            errorText="Please enter a valid email."
             onInput={inputHandler}
           />
-        )}
-        <Input
-          id="email"
-          element="input"
-          type="email"
-          label="Email"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_EMAIL()]}
-          errorText="Please enter a valid email."
-          onInput={inputHandler}
-        />
-        <Input
-          id="password"
-          element="input"
-          type="text"
-          label="Password"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid password."
-          onInput={inputHandler}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          {isLoginMode ? "LOGIN" : "SIGNUP"}
+          <Input
+            id="password"
+            element="input"
+            type="text"
+            label="Password"
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+            errorText="Please enter a valid password."
+            onInput={inputHandler}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            {isLoginMode ? "LOGIN" : "SIGNUP"}
+          </Button>
+        </form>
+        <Button inverse onClick={switchModeHandler}>
+          SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>
-      </form>
-      <Button inverse onClick={switchModeHandler}>
-        SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
-      </Button>
-    </Card>
+      </Card>
+    </React.Fragment>
   );
 };
 
