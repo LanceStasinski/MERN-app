@@ -3,6 +3,8 @@ import Input from "../../shared/components/FormElements/Input";
 
 import { useForm } from "../../shared/hooks/form-hook";
 import classes from "./Auth.module.css";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
@@ -17,6 +19,9 @@ const REST_API = process.env.REACT_APP_REST_API;
 const Auth: React.FC = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -61,6 +66,7 @@ const Auth: React.FC = () => {
     if (isLoginMode) {
     } else {
       try {
+        setIsLoading(true);
         const response = await fetch(`${REST_API}/users/signup`, {
           method: "POST",
           headers: {
@@ -75,15 +81,18 @@ const Auth: React.FC = () => {
 
         const responseData = await response.json();
         console.log(responseData);
-      } catch (error) {
+        auth.login();
+        setIsLoading(false);
+      } catch (error: any) {
         console.log(error);
+        setIsLoading(false);
+        setError(error.message || "Something went wrong, please try again.");
       }
     }
-
-    auth.login();
   };
   return (
     <Card className={`${classes.authentication} pad`}>
+      {isLoading && <LoadingSpinner asOverlay/>}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authenticateHandler}>
