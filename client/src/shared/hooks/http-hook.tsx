@@ -8,10 +8,10 @@ export const useHttpClient = () => {
 
   const sendRequest = useCallback(
     async (
-      url: string,
-      method: string = "GET",
-      body: any = null,
-      headers: any = null
+      url,
+      method = "GET",
+      body = null,
+      headers = undefined
     ) => {
       setIsLoading(true);
       const httpAbortCrtl = new AbortController();
