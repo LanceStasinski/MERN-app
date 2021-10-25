@@ -1,29 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import PlaceList from "../components/PlaceList";
-import Place from "../../models/Place";
-
-const DUMMY_PLACES: Place[] = [
-  {
-    id: "p1",
-    title: "A mountain",
-    description: "A mountain",
-    imageUrl:
-      "https://peakvisor.com/img/news/Mount-Thielsen-Wilderness-Trail.jpg",
-    address: "Oregon 97733",
-    location: {
-      lat: 43.15279264444522,
-      lng: -122.06632579421652,
-    },
-    creator: "u1",
-  },
-];
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const UserPlaces: React.FC = () => {
-  const userId = useParams<{userId?: string}>().userId;
-  const loadedPlaces = DUMMY_PLACES.filter((place) => place.creator === userId);
-  return <PlaceList items={loadedPlaces}></PlaceList>;
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedPlaces, setLoadedPlaces] = useState();
+  const userId = useParams<{ userId?: string }>().userId;
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${process.env.REACT_APP_REST_API}/places/user/${userId}`
+        );
+        setLoadedPlaces(responseData.places);
+      } catch (error) {}
+    };
+    fetchPlaces();
+  }, [sendRequest, userId]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner asOverlay={false} />
+        </div>
+      )}
+      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces!}></PlaceList>}
+    </React.Fragment>
+  );
 };
 
 export default UserPlaces;

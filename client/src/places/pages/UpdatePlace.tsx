@@ -14,7 +14,7 @@ const DUMMY_PLACES: Place[] = [
     id: "p1",
     title: "A mountain",
     description: "A mountain",
-    imageUrl:
+    image:
       "https://peakvisor.com/img/news/Mount-Thielsen-Wilderness-Trail.jpg",
     address: "Oregon 97733",
     location: {
