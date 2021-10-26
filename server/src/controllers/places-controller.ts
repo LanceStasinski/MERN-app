@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 
@@ -5,7 +7,7 @@ import getCoordsForAddress from "../util/location";
 import HttpError from "../models/http-error";
 import { placeModel as Place } from "../models/place";
 import { userModel as User } from "../models/user";
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 export const getPlaceById = async (
   req: Request,
@@ -34,7 +36,7 @@ export const getPlacesByUserId = async (
 
   let userWithPlaces;
   try {
-    userWithPlaces = await User.findById(userId).populate('places');
+    userWithPlaces = await User.findById(userId).populate("places");
   } catch (error) {
     return next(new HttpError("Could not find places for this user.", 500));
   }
@@ -42,7 +44,9 @@ export const getPlacesByUserId = async (
     return next(new HttpError("Could not find places for this user.", 404));
   }
   res.json({
-    places: userWithPlaces.places.map((place) => place.toObject({ getters: true })),
+    places: userWithPlaces.places.map((place) =>
+      place.toObject({ getters: true })
+    ),
   });
 };
 
@@ -75,21 +79,21 @@ export const createPlace = async (
 
   let user;
   try {
-    user = await User.findById(creator)
+    user = await User.findById(creator);
   } catch (error) {
-    return next(new HttpError('Creating place failed', 500))
+    return next(new HttpError("Creating place failed", 500));
   }
 
   if (!user) {
-    return next(new HttpError('Could not find user for provided userID', 404))
+    return next(new HttpError("Could not find user for provided userID", 404));
   }
 
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await createdPlace.save({session: sess});
+    await createdPlace.save({ session: sess });
     user.places.push(createdPlace);
-    await user.save({session: sess});
+    await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError("Could not save place.", 500);
@@ -129,7 +133,7 @@ export const updatePlace = async (
     return next(new HttpError("Could not save place.", 500));
   }
 
-  res.status(200).json({ place: place.toObject({getters: true})});
+  res.status(200).json({ place: place.toObject({ getters: true }) });
 };
 
 export const deletePlace = async (
@@ -141,25 +145,31 @@ export const deletePlace = async (
 
   let place;
   try {
-    place = await Place.findById(placeId).populate('creator');
+    place = await Place.findById(placeId).populate("creator");
   } catch (error) {
-    return next(new HttpError('Could not retrieve place.', 500))
+    return next(new HttpError("Could not retrieve place.", 500));
   }
 
   if (!place) {
-    return next(new HttpError('Could not find place to delete.', 404))
+    return next(new HttpError("Could not find place to delete.", 404));
   }
+
+  const imagePath = place.image;
 
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await place.remove({session: sess});
+    await place.remove({ session: sess });
     place.creator.places.pull(place);
-    await place.creator.save({session: sess})
+    await place.creator.save({ session: sess });
     await sess.commitTransaction();
   } catch (error) {
-    return next(new HttpError('Could not delete place.', 500))
+    return next(new HttpError("Could not delete place.", 500));
   }
+
+  fs.unlink(imagePath, err => {
+    console.log(err)
+  })
 
   res.status(200).json({ message: "Deleted place" });
 };
