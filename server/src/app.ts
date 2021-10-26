@@ -1,4 +1,5 @@
-import fs from 'fs'
+import fs from 'fs';
+import path from 'path';
 
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
@@ -16,6 +17,8 @@ const MONGO_URI = process.env.MONGO_URI!;
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use('/uploads/images', express.static(path.join('uploads', 'images')))
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"),

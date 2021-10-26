@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import { userModel as User } from "../models/user";
+import dotenv from "dotenv";
 
+import { userModel as User } from "../models/user";
 import HttpError from "../models/http-error";
+
+dotenv.config();
+const SERVER_URL = process.env.SERVER_URL;
 
 export const getUsers = async (
   req: Request,
@@ -27,6 +31,7 @@ export const signUp = async (
   if (!errors.isEmpty()) {
     return next(new HttpError("Invalid inputs.", 422));
   }
+
   const { name, email, password } = req.body;
 
   let existingUser;
@@ -46,11 +51,8 @@ export const signUp = async (
     name,
     email,
     password,
-    image:
-      "https://cdn.cnn.com/cnnnext/dam/assets/211019120241-05-leaf-clip-dryas-plants-exlarge-169.jpg",
-    places: [],
+    image: req.file!.path
   });
-
   try {
     await newUser.save();
   } catch (error) {
@@ -82,10 +84,8 @@ export const login = async (
   if (!existingUser || existingUser.password !== password) {
     return next(new HttpError("Invalid credentials. Could not log in.", 401));
   }
-  res
-    .status(200)
-    .json({
-      message: "User logged in",
-      user: existingUser.toObject({ getters: true }),
-    });
+  res.status(200).json({
+    message: "User logged in",
+    user: existingUser.toObject({ getters: true }),
+  });
 };
