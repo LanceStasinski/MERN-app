@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 
 interface InputItem {
-  value: string;
+  value: string| null;
   isValid: boolean;
 }
 
@@ -65,7 +65,7 @@ export const useForm = (
   });
 
   const inputHandler = useCallback(
-    (id: string, value: string, isValid: boolean) => {
+    (id: string, value: File | string | undefined, isValid: boolean) => {
       dispatch({
         type: "INPUT_CHANGE",
         value: value,
@@ -86,7 +86,7 @@ export const useForm = (
 
   const formValidation: [
     State,
-    (id: string, value: string, isValid: boolean) => void,
+    (id: string, value: File | string | undefined, isValid: boolean) => void,
     (inputData: Inputs, formValidity: boolean) => void
   ] = [formState, inputHandler, setFormData];
 

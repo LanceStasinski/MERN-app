@@ -43,6 +43,7 @@ const Auth: React.FC = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined
         },
         formState.inputs.email!.isValid && formState.inputs.password!.isValid
       );
@@ -54,6 +55,10 @@ const Auth: React.FC = () => {
             value: "",
             isValid: false,
           },
+          image: {
+            value: null,
+            isValid: false
+          }
         },
         false
       );
@@ -120,7 +125,7 @@ const Auth: React.FC = () => {
             />
           )}
           {!isLoginMode && (
-            <ImageUpload id='image' center/>
+            <ImageUpload id="image" center onInput={inputHandler}/>
           )}
           <Input
             id="email"
