@@ -1,5 +1,5 @@
 import multer from "multer";
-import { v1 as uuid } from "uuid";
+import { v4 as uuid } from "uuid";
 
 type MimeMap = {
   [key: string]: string;
@@ -26,7 +26,7 @@ const fileUpload = multer({
   }),
   fileFilter: (req, file, cb) => {
     const isValid = !!MIME_TYPE_MAP[file.mimetype]
-    if (isValid) {
+    if (!isValid) {
       return cb(new Error('Invalid mimetype'))
     }
     cb(null, isValid)

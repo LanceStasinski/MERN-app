@@ -43,7 +43,7 @@ const Auth: React.FC = () => {
         {
           ...formState.inputs,
           name: undefined,
-          image: undefined
+          image: undefined,
         },
         formState.inputs.email!.isValid && formState.inputs.password!.isValid
       );
@@ -57,8 +57,8 @@ const Auth: React.FC = () => {
           },
           image: {
             value: null,
-            isValid: false
-          }
+            isValid: false,
+          },
         },
         false
       );
@@ -87,17 +87,19 @@ const Auth: React.FC = () => {
       } catch (error) {} // error is caught in the custom hook
     } else {
       try {
+        const formData = new FormData();
+        formData.append("email", formState.inputs.email!.value as string);
+        formData.append("name", formState.inputs.name!.value as string);
+        formData.append("password", formState.inputs.password!.value as string);
+        formData.append(
+          "image",
+          formState.inputs.image!.value as string | Blob
+        );
+
         const responseData = await sendRequest(
           `${REST_API}/users/signup`,
           "POST",
-          JSON.stringify({
-            name: formState.inputs.name!.value,
-            email: formState.inputs.email!.value,
-            password: formState.inputs.password!.value,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          formData
         );
 
         auth.login(responseData.user.id);
@@ -125,7 +127,7 @@ const Auth: React.FC = () => {
             />
           )}
           {!isLoginMode && (
-            <ImageUpload id="image" center onInput={inputHandler}/>
+            <ImageUpload id="image" center onInput={inputHandler} />
           )}
           <Input
             id="email"
