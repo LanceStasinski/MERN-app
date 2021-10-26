@@ -7,7 +7,11 @@ import inputCSS from "./Input.module.css";
 const ImageUpload: React.FC<{
   id: string;
   center?: boolean;
-  onInput: (id: string, value: File | string | undefined, isValid: boolean) => void;
+  onInput: (
+    id: string,
+    value: File | string | undefined,
+    isValid: boolean
+  ) => void;
   errorText?: string;
 }> = (props) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
