@@ -1,5 +1,5 @@
 import React, { FormEvent, useContext } from "react";
-import { useHistory } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../util/validators";
 import Input from "../../shared/components/FormElements/Input";
@@ -10,6 +10,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 const NewPlace: React.FC = () => {
   const auth = useContext(AuthContext);
@@ -28,6 +29,10 @@ const NewPlace: React.FC = () => {
         value: "",
         isValid: false,
       },
+      image: {
+        value: null,
+        isValid: false,
+      },
     },
     false
   );
@@ -37,20 +42,22 @@ const NewPlace: React.FC = () => {
   const placeSubmitHandler = async (event: FormEvent) => {
     event.preventDefault();
     try {
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title!.value as string);
+      formData.append(
+        "description",
+        formState.inputs.description!.value as string
+      );
+      formData.append("address", formState.inputs.address!.value as string);
+      formData.append("image", formState.inputs.image!.value as string | Blob);
+      formData.append("creator", auth.userId! as string);
+
       await sendRequest(
         `${process.env.REACT_APP_REST_API}/places`,
         "POST",
-        JSON.stringify({
-          title: formState.inputs.title!.value,
-          description: formState.inputs.description!.value,
-          address: formState.inputs.address!.value,
-          creator: auth.userId,
-        }),
-        {
-          "Content-Type": "application/json",
-        }
+        formData
       );
-      history.push('/')
+      history.push("/");
     } catch (error) {}
   };
 
@@ -84,6 +91,11 @@ const NewPlace: React.FC = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid address."
           onInput={inputHandler}
+        />
+        <ImageUpload
+          id="image"
+          onInput={inputHandler}
+          errorText="Please provide an image"
         />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE

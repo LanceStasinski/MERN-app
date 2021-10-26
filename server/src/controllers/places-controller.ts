@@ -69,8 +69,7 @@ export const createPlace = async (
     description,
     address,
     location,
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDMN_RD207lKI3m5FZOJsgF7xvHFxluOdToA&usqp=CAU",
+    image: req.file!.path,
     creator,
   });
 
