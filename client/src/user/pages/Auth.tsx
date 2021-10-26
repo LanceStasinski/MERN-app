@@ -14,6 +14,7 @@ import Button from "../../shared/components/FormElements/Button";
 import Card from "../../shared/components/UIElements/Card";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 const REST_API = process.env.REACT_APP_REST_API;
 
@@ -117,6 +118,9 @@ const Auth: React.FC = () => {
               errorText="Please enter your name."
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
+            <ImageUpload id='image' center/>
           )}
           <Input
             id="email"
