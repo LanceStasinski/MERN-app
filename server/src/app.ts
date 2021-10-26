@@ -1,3 +1,5 @@
+import fs from 'fs'
+
 import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
@@ -36,6 +38,11 @@ app.use((req, res, next) => {
 });
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    })
+  }
   if (res.headersSent) {
     return next(err);
   }
