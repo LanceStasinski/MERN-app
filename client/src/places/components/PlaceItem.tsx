@@ -18,6 +18,7 @@ const PlaceItem: React.FC<{
   address: string;
   coordinates: { lat: number; lng: number };
   onDelete: (deletedPlaceId: string) => void;
+  creatorId: string;
 }> = (props) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
@@ -98,10 +99,10 @@ const PlaceItem: React.FC<{
               VIEW ON MAP
             </Button>
 
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETE
               </Button>

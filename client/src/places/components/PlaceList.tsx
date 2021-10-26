@@ -30,6 +30,7 @@ const PlaceList: React.FC<{ items: Place[], onDeletePlace: (deletedPlaceId: stri
           address={place.address}
           coordinates={place.location}
           onDelete={props.onDeletePlace}
+          creatorId={place.creator}
         />
       ))}
     </ul>
