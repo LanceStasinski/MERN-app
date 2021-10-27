@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -16,17 +16,28 @@ import { AuthContext } from "./shared/context/auth-context";
 
 function App() {
   const [token, setToken] = useState(null);
-  const [userId, setUserId] = useState(null)
+  const [userId, setUserId] = useState(null);
 
   const login = useCallback((uid, token) => {
     setToken(token);
-    localStorage.setItem('userData', JSON.stringify({userId: uid, token: token}))
-    setUserId(uid)
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({ userId: uid, token: token })
+    );
+    setUserId(uid);
   }, []);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData") as string);
+    if (storedData && storedData.token) {
+      login(storedData.userId, storedData.token);
+    }
+  }, [login]);
 
   const logout = useCallback(() => {
     setToken(null);
-    setUserId(null)
+    setUserId(null);
+    localStorage.removeItem('userData');
   }, []);
 
   let routes;
@@ -68,7 +79,13 @@ function App() {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn: !!token, login: login, logout: logout, userId: userId, token: token }}
+      value={{
+        isLoggedIn: !!token,
+        login: login,
+        logout: logout,
+        userId: userId,
+        token: token,
+      }}
     >
       <Router>
         <MainNavigation />
