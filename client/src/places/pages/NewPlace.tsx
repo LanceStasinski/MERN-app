@@ -55,7 +55,10 @@ const NewPlace: React.FC = () => {
       await sendRequest(
         `${process.env.REACT_APP_REST_API}/places`,
         "POST",
-        formData
+        formData,
+        {
+          Authorization: "Bearer " + auth.token
+        }
       );
       history.push("/");
     } catch (error) {}

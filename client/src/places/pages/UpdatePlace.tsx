@@ -14,7 +14,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { AuthContext } from "../../shared/context/auth-context";
 
 const UpdatePlace: React.FC = () => {
-  const auth = useContext(AuthContext)
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const placeId = useParams<{ placeId: string }>().placeId;
   const [loadedPlace, setLoadedPlace] = useState<Place>();
@@ -71,9 +71,10 @@ const UpdatePlace: React.FC = () => {
         }),
         {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
         }
       );
-      history.push(`/${auth.userId}/places`)
+      history.push(`/${auth.userId}/places`);
     } catch (error) {}
   };
 

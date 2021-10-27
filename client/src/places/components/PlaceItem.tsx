@@ -42,7 +42,9 @@ const PlaceItem: React.FC<{
     try {
       await sendRequest(
         `${process.env.REACT_APP_REST_API}/places/${props.id}`,
-        "DELETE"
+        "DELETE", {
+          Authorization: 'Bearer ' + auth.token,
+        }
       );
       props.onDelete(props.id);
     } catch (error) {}

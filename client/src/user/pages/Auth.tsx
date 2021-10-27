@@ -83,7 +83,7 @@ const Auth: React.FC = () => {
           }
         );
 
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error) {} // error is caught in the custom hook
     } else {
       try {
@@ -102,7 +102,7 @@ const Auth: React.FC = () => {
           formData
         );
 
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (error: any) {}
     }
   };
