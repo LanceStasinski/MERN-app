@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
+import bcrypt from 'bcryptjs'
 import dotenv from "dotenv";
 
 import { userModel as User } from "../models/user";
@@ -47,11 +48,20 @@ export const signUp = async (
     return next(new HttpError("A user with this email already exists", 422));
   }
 
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 12);
+  } catch (error) {
+    return next(new HttpError('Could not hash password', 500))
+  }
+
+
   const newUser = new User({
     name,
     email,
-    password,
-    image: req.file!.path
+    password: hashedPassword,
+    image: req.file!.path,
+    places: []
   });
   try {
     await newUser.save();
@@ -81,9 +91,21 @@ export const login = async (
     );
   }
 
-  if (!existingUser || existingUser.password !== password) {
+  if (!existingUser) {
     return next(new HttpError("Invalid credentials. Could not log in.", 401));
   }
+
+  let isValidPassword = false;
+  try {
+    isValidPassword = await bcrypt.compare(password, existingUser.password)
+  } catch (error) {
+    return next(new HttpError('Could not log you in.', 500))
+  }
+
+  if (!isValidPassword) {
+    return next(new HttpError("Invalid credentials. Could not log in.", 401));
+  }
+
   res.status(200).json({
     message: "User logged in",
     user: existingUser.toObject({ getters: true }),
