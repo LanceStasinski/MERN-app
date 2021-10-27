@@ -42,8 +42,9 @@ const PlaceItem: React.FC<{
     try {
       await sendRequest(
         `${process.env.REACT_APP_REST_API}/places/${props.id}`,
-        "DELETE", {
-          Authorization: 'Bearer ' + auth.token,
+        "DELETE", {},
+        {
+          Authorization: "Bearer " + auth.token
         }
       );
       props.onDelete(props.id);
@@ -89,7 +90,10 @@ const PlaceItem: React.FC<{
         <Card className={classes["place-item__content"]}>
           {isLoading && <LoadingSpinner asOverlay />}
           <div className={classes["place-item__image"]}>
-            <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
+            <img
+              src={`http://localhost:5000/${props.image}`}
+              alt={props.title}
+            />
           </div>
           <div className={classes["place-item__info"]}>
             <h2>{props.title}</h2>

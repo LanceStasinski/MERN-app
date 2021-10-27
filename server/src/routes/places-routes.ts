@@ -16,6 +16,10 @@ const router = express.Router();
 
 router.get("/:pid", getPlaceById);
 
+router.get("/user/:uid", check(), getPlacesByUserId);
+
+router.use(auth)
+
 router.patch(
   "/:pid",
   [
@@ -26,10 +30,6 @@ router.patch(
 );
 
 router.delete("/:pid", deletePlace);
-
-router.get("/user/:uid", check(), getPlacesByUserId);
-
-router.use(auth)
 
 router.post(
   "/",

@@ -107,7 +107,7 @@ export const login = async (
   }
 
   if (!existingUser) {
-    return next(new HttpError("Invalid credentials. Could not log in.", 401));
+    return next(new HttpError("Invalid credentials. Could not log in.", 403));
   }
 
   let isValidPassword = false;
@@ -118,7 +118,7 @@ export const login = async (
   }
 
   if (!isValidPassword) {
-    return next(new HttpError("Invalid credentials. Could not log in.", 401));
+    return next(new HttpError("Invalid credentials. Could not log in.", 403));
   }
 
   let token;
