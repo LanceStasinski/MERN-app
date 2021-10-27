@@ -2,6 +2,7 @@ import express from "express";
 import { check } from "express-validator";
 
 import fileUpload from "../middleware/file-upload";
+import { auth } from "../middleware/check-auth";
 
 import {
   getPlaceById,
@@ -27,6 +28,8 @@ router.patch(
 router.delete("/:pid", deletePlace);
 
 router.get("/user/:uid", check(), getPlacesByUserId);
+
+router.use(auth)
 
 router.post(
   "/",
