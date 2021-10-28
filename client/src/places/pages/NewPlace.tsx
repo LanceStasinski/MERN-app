@@ -50,8 +50,6 @@ const NewPlace: React.FC = () => {
       );
       formData.append("address", formState.inputs.address!.value as string);
       formData.append("image", formState.inputs.image!.value as string | Blob);
-      formData.append("creator", auth.userId! as string);
-
       await sendRequest(
         `${process.env.REACT_APP_REST_API}/places`,
         "POST",
