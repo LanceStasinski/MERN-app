@@ -12,7 +12,10 @@ import HttpError from "./models/http-error";
 //import usersRoutes from './routes/users-routes'
 
 dotenv.config();
-const MONGO_URI = process.env.MONGO_URI!;
+const MONGO_USER = process.env.MONGO_USER!;
+const MONGO_PASS = process.env.MONGO_PASS!;
+const MONGO_NAME = process.env.MONGO_NAME!;
+const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@cluster0.l5g7f.mongodb.net/${MONGO_NAME}`
 
 const app = express();
 

@@ -8,7 +8,6 @@ import { userModel as User } from "../models/user";
 import HttpError from "../models/http-error";
 
 dotenv.config();
-const SERVER_URL = process.env.SERVER_URL;
 const JWT_KEY: string = process.env.JWT_KEY!;
 
 export const getUsers = async (
