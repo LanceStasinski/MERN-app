@@ -22,3 +22,11 @@ The backend is a REST api that has separate routes and controllers for places an
 ### MongoDB
 
 The database is a MongoDB Atlas database. The `mongoose` package is used to connect to the database and perform CRUD (Create, Read, Update, Delete) operations. Schemas are set up for Places and Users, and relations are setup between the two schemas. Sessions are used to modify related items, such as placeIds stored within a single user.
+
+## Deployment
+
+The React app is deployed on [Firebase](https://mern-user-places-client.web.app/) and the server is deployed on [Heroku](https://mern-app-user-places.herokuapp.com/). NOTE: the server is running on Heroku's free tier so uploaded images are not persistantly stored.
+
+## Challenges
+
+I followed the instructors logic, but I implemented the Typescript and CSS modules on my own. Implimenting TypeScript was especially challenging due to type errors that occurred between components; however, this was a great way to learn how to be more explicit about the types I was using and expected. Some compilation errors occured during the build process and they ultimately made me more familiar with the tsconfig.json file. The CSS modules were occassionally difficult to manage when the CSS properties of one component were forwarded to another through props, but this was a good oportunity to practice CSS specificity.
